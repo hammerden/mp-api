@@ -1,0 +1,32 @@
+[
+  {
+    "id": "764",
+    "customer": "Lem Nabong",
+    "diet": "balanced",
+    "contactNumber": "+639994951120",
+    "allergies": [],
+    "avoidedIngredients": ["nuts"],
+    "deliveryMonday": "2020-01-01T00:00:00Z",
+    "deliveryTuesday": "2020-01-01T00:00:00Z"
+  },
+  {
+    "id": "045",
+    "customer": "Ronald Nabong",
+    "diet": "balanced",
+    "contactNumber": "+9992930302",
+    "allergies": ["nut", "coconut"],
+    "avoidedIngredients": [],
+    "deliveryMonday": "2020-01-01T00:00:00Z",
+    "deliveryTuesday": "2020-01-01T00:00:00Z"
+  },
+  {
+    "id": "321",
+    "customer": "Philip Groeber",
+    "diet": "keto",
+    "contactNumber": "+639994951120",
+    "allergies": ["nut", "coconut"],
+    "avoidedIngredients": ["fish"],
+    "deliveryMonday": "2020-01-01T00:00:00Z",
+    "deliveryTuesday": "2020-01-01T00:00:00Z"
+  }
+]
