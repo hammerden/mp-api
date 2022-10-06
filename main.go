@@ -6,6 +6,7 @@ import (
 	"github.com/rs/xid"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -27,6 +28,7 @@ type MealPlan struct {
 	AvoidedIngredients []string  `json:"avoidedIngredients"`
 	DeliveryMonday     time.Time `json:"deliveryMonday"'`  //todo Delivery object and other days, validator
 	DeliveryTuesday    time.Time `json:"deliveryTuesday"'` //todo Delivery object and other days, validator
+	Tags               []string  `json:"tags"`
 	CreatedAt          time.Time `json:"createdAt"`
 }
 
@@ -35,7 +37,47 @@ func main() {
 	router.POST("/mealplans", NewMealPlanHandler)
 	router.GET("/mealplans", ListMealPlanHandler)
 	router.PUT("/mealplans/:id", UpdateMealPlanHandler)
+	router.DELETE("/mealplans/:id", DeleteMealPlanHandler)
+	router.GET("/mealplans/search", SearchMealPlanHandler)
 	router.Run()
+}
+
+func SearchMealPlanHandler(c *gin.Context) {
+	tag := c.Query("tag")
+	listOfMealPlans := make([]MealPlan, 0)
+	for i := 0; i < len(mealPlans); i++ {
+		found := false
+		for _, t := range mealPlans[i].Tags {
+			if strings.EqualFold(t, tag) {
+				found = true
+			}
+		}
+		if found {
+			listOfMealPlans = append(listOfMealPlans, mealPlans[i])
+		}
+
+	}
+	c.JSON(http.StatusOK, listOfMealPlans)
+}
+
+func DeleteMealPlanHandler(c *gin.Context) {
+	id := c.Param("id")
+	index := -1
+	for i := 0; i < len(mealPlans); i++ {
+		if mealPlans[i].ID == id {
+			index = i
+		}
+	}
+	if index == -1 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Meal not found",
+		})
+		return
+	}
+	mealPlans = append(mealPlans[:index], mealPlans[index+1:]...)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Meal Plan has been deleted",
+	})
 }
 
 func UpdateMealPlanHandler(c *gin.Context) {
@@ -47,10 +89,12 @@ func UpdateMealPlanHandler(c *gin.Context) {
 		})
 		return
 	}
+	mealPlan.ID = id
 	index := -1
 	for i := 0; i < len(mealPlans); i++ {
 		if mealPlans[i].ID == id {
 			index = i
+			break
 		}
 	}
 	if index == -1 {

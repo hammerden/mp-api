@@ -7,7 +7,8 @@
     "allergies": [],
     "avoidedIngredients": ["nuts"],
     "deliveryMonday": "2020-01-01T00:00:00Z",
-    "deliveryTuesday": "2020-01-01T00:00:00Z"
+    "deliveryTuesday": "2020-01-01T00:00:00Z",
+    "tags": ["urgent", "lawyer", "w1", "w2"]
   },
   {
     "id": "045",
@@ -17,7 +18,8 @@
     "allergies": ["nut", "coconut"],
     "avoidedIngredients": [],
     "deliveryMonday": "2020-01-01T00:00:00Z",
-    "deliveryTuesday": "2020-01-01T00:00:00Z"
+    "deliveryTuesday": "2020-01-01T00:00:00Z",
+    "tags": ["w1", "w2", "w3"]
   },
   {
     "id": "321",
@@ -27,6 +29,7 @@
     "allergies": ["nut", "coconut"],
     "avoidedIngredients": ["fish"],
     "deliveryMonday": "2020-01-01T00:00:00Z",
-    "deliveryTuesday": "2020-01-01T00:00:00Z"
+    "deliveryTuesday": "2020-01-01T00:00:00Z",
+    "tags": ["unpaid", "w2", "w3"]
   }
 ]
