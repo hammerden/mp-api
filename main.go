@@ -1,3 +1,19 @@
+// Meal Plan API
+//
+// This is a sample recipes API. You can find out more about the API at https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin.
+//
+//	Schemes: http
+//	Host: localhost:8080
+//	BasePath: /
+//	Version: 1.0.0
+//
+//	Consumes:
+//	- application/json
+//
+//	Produces:
+//	- application/json
+//
+// swagger:meta
 package main
 
 import (
@@ -80,6 +96,26 @@ func DeleteMealPlanHandler(c *gin.Context) {
 	})
 }
 
+// swagger:operation PUT /mealplans/{id} mealplans updateMealPlan
+// Update an existing meal plan
+// ---
+// parameters:
+//   - name: id
+//     in: path
+//     description: ID of the mealplan
+//     required: true
+//     type: string
+//
+// produces:
+// - application/json
+// responses:
+//
+//	'200':
+//	    description: Successful operation
+//	'400':
+//	    description: Invalid input
+//	'404':
+//	    description: Invalid mealplan ID
 func UpdateMealPlanHandler(c *gin.Context) {
 	id := c.Param("id")
 	var mealPlan MealPlan
@@ -121,6 +157,15 @@ func NewMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlan)
 }
 
+// swagger:operation GET /mealplans mealplans listMealPlans
+// Returns list of mealplans
+// ---
+// produces:
+// - application/json
+// responses:
+//
+//	'200':
+//	    description: Successful operation
 func ListMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlans)
 }
