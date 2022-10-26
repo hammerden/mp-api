@@ -17,9 +17,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -27,11 +32,32 @@ import (
 )
 
 var mealPlans []MealPlan
+var ctx context.Context
+var err error
+var client *mongo.Client
 
 func init() {
 	mealPlans = make([]MealPlan, 0)
 	file, _ := os.ReadFile("meal_plans.json")
 	_ = json.Unmarshal([]byte(file), &mealPlans)
+	ctx = context.Background()
+	client, err = mongo.Connect(ctx,
+		options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+	if err = client.Ping(context.TODO(),
+		readpref.Primary()); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Connected to MongoDB")
+	var listOfMealPlans []interface{}
+	for _, mealPlan := range mealPlans {
+		listOfMealPlans = append(listOfMealPlans, mealPlan)
+	}
+	collection := client.Database(os.Getenv("MONGO_DATABASE")).Collection("mealPlans")
+	insertManyResult, err := collection.InsertMany(ctx, listOfMealPlans)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Inserted mealPlans: ", len(insertManyResult.InsertedIDs))
 
 }
 
