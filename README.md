@@ -6,9 +6,6 @@
 ## Contribute
 `go mod download`
 
-## Run
-`go run main.go`
-
 ## Testing
 
 ### Unit Tests
@@ -23,9 +20,13 @@ Create folder
 
 `mkdir ./mongodb_data`
 
-Run the container
+## Run the container
 
 `docker run -d --name mongodb -v $(pwd)/mongodb_data:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:6.0.2`
+
+## Run the application
+
+`MONGO_URI="mongodb://admin:password@localhost:27017/test?authSource=admin" go run main.go`
 
 ## Documentation
 ```
