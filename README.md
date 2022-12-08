@@ -26,8 +26,14 @@ Create folder
 ## Compass connection string
 `mongodb://admin:password@localhost:27017`
 
-## Run the application
-`MONGO_DATABASE=mealPlan MONGO_URI="mongodb://admin:password@0.0.0.0:27017/mealPlan?authSource=admin" go run main.go`
+## Set env variables
+```
+export MONGO_DATABASE=mealPlan
+export MONGO_URI="mongodb://admin:password@0.0.0.0:27017/mealPlan?authSource=admin"
+```
+
+## Run the application 
+`go run main.go`
 
 ## Documentation
 ```
