@@ -52,7 +52,7 @@ func init() {
 	for _, mealPlan := range mealPlans {
 		listOfMealPlans = append(listOfMealPlans, mealPlan)
 	}
-	collection := client.Database(os.Getenv("MONGO_DATABASE")).Collection("mealPlans")
+	collection := client.Database(os.Getenv("MONGO_DATABASE")).Collection("hd")
 	insertManyResult, err := collection.InsertMany(ctx, listOfMealPlans)
 	if err != nil {
 		log.Fatal(err)

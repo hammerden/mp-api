@@ -21,12 +21,13 @@ Create folder
 `mkdir ./mongodb_data`
 
 ## Run the container
+`docker run -d --name mongodb -v $(pwd)/mongodb_data:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:5.0.14`
 
-`docker run -d --name mongodb -v $(pwd)/mongodb_data:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:6.0.2`
+## Compass connection string
+`mongodb://admin:password@localhost:27017`
 
 ## Run the application
-
-`MONGO_URI="mongodb://admin:password@localhost:27017/test?authSource=admin" go run main.go`
+`MONGO_DATABASE=mealPlan MONGO_URI="mongodb://admin:password@0.0.0.0:27017/mealPlan?authSource=admin" go run main.go`
 
 ## Documentation
 ```
