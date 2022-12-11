@@ -18,9 +18,10 @@ package main
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/rs/xid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -35,11 +36,9 @@ var mealPlans []MealPlan
 var ctx context.Context
 var err error
 var client *mongo.Client
+var collection *mongo.Collection
 
 func init() {
-	mealPlans = make([]MealPlan, 0)
-	file, _ := os.ReadFile("meal_plans.json")
-	_ = json.Unmarshal([]byte(file), &mealPlans)
 	ctx = context.Background()
 	client, err = mongo.Connect(ctx,
 		options.Client().ApplyURI(os.Getenv("MONGO_URI")))
@@ -48,30 +47,22 @@ func init() {
 		log.Fatal(err)
 	}
 	log.Println("Connected to MongoDB")
-	var listOfMealPlans []interface{}
-	for _, mealPlan := range mealPlans {
-		listOfMealPlans = append(listOfMealPlans, mealPlan)
-	}
-	collection := client.Database(os.Getenv("MONGO_DATABASE")).Collection("hd")
-	insertManyResult, err := collection.InsertMany(ctx, listOfMealPlans)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Inserted mealPlans: ", len(insertManyResult.InsertedIDs))
-
+	collection = client.Database(os.Getenv(
+		"MONGO_DATABASE")).Collection("recipes")
 }
 
+// swagger:parameters mealPlans MealPlan
 type MealPlan struct {
-	ID                 string    `json:"id"`
-	Customer           string    `json:"customer"`      //todo Name object
-	Diet               string    `json:"diet"`          //todo Enum
-	ContactNumber      string    `json:"contactNumber"` //todo double check type for phone numbers
-	Allergies          []string  `json:"allergies"`
-	AvoidedIngredients []string  `json:"avoidedIngredients"`
-	DeliveryMonday     time.Time `json:"deliveryMonday"'`  //todo Delivery object and other days, validator
-	DeliveryTuesday    time.Time `json:"deliveryTuesday"'` //todo Delivery object and other days, validator
-	Tags               []string  `json:"tags"`
-	CreatedAt          time.Time `json:"createdAt"`
+	ID                 primitive.ObjectID `json:"id" bson:"_id"`
+	Customer           string             `json:"customer" bson:"customer"`           //todo Name object
+	Diet               string             `json:"diet" bson:"diet"`                   //todo Enum
+	ContactNumber      string             `json:"contactNumber" bson:"contactNumber"` //todo double check type for phone numbers
+	Allergies          []string           `json:"allergies" bson:"allergies"`
+	AvoidedIngredients []string           `json:"avoidedIngredients" bson:"avoidedIngredients"`
+	DeliveryMonday     time.Time          `json:"deliveryMonday" bson:"DeliveryMonday" `  //todo Delivery object and other days, validator
+	DeliveryTuesday    time.Time          `json:"deliveryTuesday" bson:"deliveryTuesday"` //todo Delivery object and other days, validator
+	Tags               []string           `json:"tags" bson:"tags"`
+	CreatedAt          time.Time          `json:"createdAt" bson:"createdAt"`
 }
 
 func main() {
@@ -172,14 +163,18 @@ func UpdateMealPlanHandler(c *gin.Context) {
 func NewMealPlanHandler(c *gin.Context) {
 	var mealPlan MealPlan
 	if err := c.ShouldBindJSON(&mealPlan); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	mealPlan.ID = xid.New().String()
+	mealPlan.ID = primitive.NewObjectID()
 	mealPlan.CreatedAt = time.Now()
-	mealPlans = append(mealPlans, mealPlan)
+	_, err = collection.InsertOne(ctx, mealPlan)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": "Error while inserting a new recipe"})
+		return
+	}
 	c.JSON(http.StatusOK, mealPlan)
 }
 
@@ -193,5 +188,18 @@ func NewMealPlanHandler(c *gin.Context) {
 //	'200':
 //	    description: Successful operation
 func ListMealPlanHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, mealPlans)
+	cur, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": err.Error()})
+		return
+	}
+	defer cur.Close(ctx)
+	recipes := make([]MealPlan, 0)
+	for cur.Next(ctx) {
+		var recipe MealPlan
+		cur.Decode(&recipe)
+		recipes = append(recipes, recipe)
+	}
+	c.JSON(http.StatusOK, recipes)
 }

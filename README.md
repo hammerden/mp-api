@@ -30,6 +30,9 @@ export MONGO_URI="mongodb://admin:password@0.0.0.0:27017/mealPlan?authSource=adm
 ```
 > Make sure that your IDE can read this values
 
+## Optional: Import data
+`mongoimport --username admin --password password --authenticationDatabase admin --db demo --collection recipes --file meal_plans.json --jsonArray`
+
 ## Run the application 
 `go run main.go`
 
