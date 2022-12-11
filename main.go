@@ -70,7 +70,7 @@ func main() {
 	router.POST("/mealplans", NewMealPlanHandler)
 	router.GET("/mealplans", ListMealPlanHandler)
 	router.PUT("/mealplans/:id", UpdateMealPlanHandler)
-	router.DELETE("/mealplans/:id", DeleteMealPlanHandler)
+	//router.DELETE("/mealplans/:id", DeleteMealPlanHandler)
 	router.GET("/mealplans/search", SearchMealPlanHandler)
 	router.Run()
 }
@@ -93,25 +93,25 @@ func SearchMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, listOfMealPlans)
 }
 
-func DeleteMealPlanHandler(c *gin.Context) {
-	id := c.Param("id")
-	index := -1
-	for i := 0; i < len(mealPlans); i++ {
-		if mealPlans[i].ID == id {
-			index = i
-		}
-	}
-	if index == -1 {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Meal not found",
-		})
-		return
-	}
-	mealPlans = append(mealPlans[:index], mealPlans[index+1:]...)
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Meal Plan has been deleted",
-	})
-}
+//func DeleteMealPlanHandler(c *gin.Context) {
+//	id := c.Param("id")
+//	index := -1
+//	for i := 0; i < len(mealPlans); i++ {
+//		if mealPlans[i].ID == id {
+//			index = i
+//		}
+//	}
+//	if index == -1 {
+//		c.JSON(http.StatusNotFound, gin.H{
+//			"error": "Meal not found",
+//		})
+//		return
+//	}
+//	mealPlans = append(mealPlans[:index], mealPlans[index+1:]...)
+//	c.JSON(http.StatusOK, gin.H{
+//		"message": "Meal Plan has been deleted",
+//	})
+//}
 
 // swagger:operation PUT /mealplans/{id} mealplans updateMealPlan
 // Update an existing meal plan
@@ -137,27 +137,29 @@ func UpdateMealPlanHandler(c *gin.Context) {
 	id := c.Param("id")
 	var mealPlan MealPlan
 	if err := c.ShouldBindJSON(&mealPlan); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	mealPlan.ID = id
-	index := -1
-	for i := 0; i < len(mealPlans); i++ {
-		if mealPlans[i].ID == id {
-			index = i
-			break
-		}
-	}
-	if index == -1 {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Recipes not found",
-		})
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	_, err = collection.UpdateOne(ctx, bson.M{
+		"_id": objectId,
+	}, bson.D{{"$set", bson.D{
+		{"customer", mealPlan.Customer},
+		{"instructions", mealPlan.Diet},
+		{"ingredients", mealPlan.ContactNumber},
+		{"allergies", mealPlan.Allergies},
+		{"avoidedIngredients", mealPlan.AvoidedIngredients},
+		{"deliveryMonday", mealPlan.DeliveryMonday},
+		{"deliveryTuesday", mealPlan.DeliveryTuesday},
+		{"tags", mealPlan.Tags},
+	}}})
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError,
+			gin.H{"error": err.Error()})
 		return
 	}
-	mealPlans[index] = mealPlan
-	c.JSON(http.StatusOK, mealPlan)
+	c.JSON(http.StatusOK, gin.H{"message": "Meal Plan has been updated"})
 }
 
 func NewMealPlanHandler(c *gin.Context) {
