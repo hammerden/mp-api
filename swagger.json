@@ -15,34 +15,78 @@
     "version": "1.0.0"
   },
   "host": "localhost:8080",
-  "basePath": "/",
+  "basePath": "/mp",
   "paths": {
-    "/mealPlans": {
+    "/mp": {
       "get": {
         "description": "Returns list of mealPlans",
-        "produces": [
-          "application/json"
-        ],
-        "operationId": "listMealPlans"
-      },
-      "post": {
-        "description": "Create a new mealPlan",
-        "produces": [
-          "application/json"
-        ],
-        "operationId": "createMealPlan"
-      }
-    },
-    "/mealPlans/{id}": {
-      "put": {
-        "description": "Update an existing mealPlan",
         "produces": [
           "application/json"
         ],
         "tags": [
           "mealPlans"
         ],
-        "operationId": "updateMealPlan",
+        "operationId": "list-all"
+      },
+      "post": {
+        "description": "New mealPlan",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "mealPlans"
+        ],
+        "operationId": "create"
+      }
+    },
+    "/mp/{id}": {
+      "get": {
+        "description": "Get one mealPlan",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "mealPlans"
+        ],
+        "operationId": "describe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "mealPlan ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "description": "Existing mealPlan",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "mealPlans"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of the mealPlan",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "description": "Remove an existing mealPlan",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "mealPlans"
+        ],
+        "operationId": "delete",
         "parameters": [
           {
             "type": "string",

@@ -46,8 +46,8 @@ func init() {
 
 func main() {
 	router := gin.Default()
-	router.POST("/mealpslans", mealPlansHandler.NewMealPlanHandler)
-	router.GET("/mealplans", mealPlansHandler.ListMealPlansHandler)
-	router.PUT("/mealplans/:id", mealPlansHandler.UpdateMealPlanHandler)
+	router.POST("/mp", mealPlansHandler.NewMealPlanHandler)
+	router.GET("/mp", mealPlansHandler.ListMealPlansHandler)
+	router.PUT("/mp/:id", mealPlansHandler.UpdateMealPlanHandler)
 	router.Run()
 }

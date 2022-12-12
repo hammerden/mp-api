@@ -23,7 +23,7 @@ func NewMealPlansHandler(ctx context.Context, collection *mongo.Collection) *Mea
 	}
 }
 
-// swagger:operation GET /mealPlans listMealPlans
+// swagger:operation GET /mp mealPlans list-all
 // Returns list of mealPlans
 // ---
 // produces:
@@ -49,8 +49,8 @@ func (handler *MealPlansHandler) ListMealPlansHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlans)
 }
 
-// swagger:operation POST /mealPlans newMealPlan
-// Create a new mealPlan
+// swagger:operation POST /mp mealPlans create
+// New mealPlan
 // ---
 // produces:
 // - application/json
@@ -79,8 +79,8 @@ func (handler *MealPlansHandler) NewMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlan)
 }
 
-// swagger:operation PUT /mealPlans/{id} updateMealPlan
-// Update an existing mealPlan
+// swagger:operation PUT /mp/{id} mealPlans update
+// Existing mealPlan
 // ---
 // parameters:
 //   - name: id
@@ -128,8 +128,8 @@ func (handler *MealPlansHandler) UpdateMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "MealPlan has been updated"})
 }
 
-// swagger:operation DELETE /mealPlans/{id} mealPlans deleteMealPlan
-// Delete an existing mealPlan
+// swagger:operation DELETE /mp/{id} mealPlans delete
+// Remove an existing mealPlan
 // ---
 // produces:
 // - application/json
@@ -159,7 +159,7 @@ func (handler *MealPlansHandler) DeleteMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "MealPlan has been deleted"})
 }
 
-// swagger:operation GET /mealPlans/{id} mealPlans
+// swagger:operation GET /mp/{id} mealPlans describe
 // Get one mealPlan
 // ---
 // produces:
@@ -190,34 +190,3 @@ func (handler *MealPlansHandler) GetOneMealPlanHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, mealPlan)
 }
-
-// swagger:operation GET /mealPlans/search mealPlans findMealPlan
-// Search mealPlans based on tags
-// ---
-// produces:
-// - application/json
-// parameters:
-//   - name: tag
-//     in: query
-//     description: mealPlan tag
-//     required: true
-//     type: string
-// responses:
-//     '200':
-//         description: Successful operation
-/*func SearchMealPlansHandler(c *gin.Context) {
-	tag := c.Query("tag")
-	listOfMealPlans := make([]MealPlan, 0)
-	for i := 0; i < len(mealPlans); i++ {
-		found := false
-		for _, t := range mealPlans[i].Tags {
-			if strings.EqualFold(t, tag) {
-				found = true
-			}
-		}
-		if found {
-			listOfMealPlans = append(listOfMealPlans, mealPlans[i])
-		}
-	}
-	c.JSON(http.StatusOK, listOfMealPlans)
-}*/
