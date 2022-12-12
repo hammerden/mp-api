@@ -79,7 +79,7 @@ func (handler *MealPlansHandler) NewMealPlanHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlan)
 }
 
-// swagger:operation PUT /mealPlans/{id} mealPlans updateMealPlan
+// swagger:operation PUT /mealPlans/{id} updateMealPlan
 // Update an existing mealPlan
 // ---
 // parameters:
