@@ -10,39 +10,43 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "This is a sample recipes API. You can find out more about the API at https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin.",
+    "description": "This is a sample mealPlans API. You can find out more about the API at https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin.",
     "title": "Meal Plan API",
     "version": "1.0.0"
   },
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-    "/mealplans": {
+    "/mealPlans": {
       "get": {
-        "description": "Returns list of mealplans",
+        "description": "Returns list of mealPlans",
         "produces": [
           "application/json"
-        ],
-        "tags": [
-          "mealplans"
         ],
         "operationId": "listMealPlans"
+      },
+      "post": {
+        "description": "Create a new mealPlan",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "createMealPlan"
       }
     },
-    "/mealplans/{id}": {
+    "/mealPlans/{id}": {
       "put": {
-        "description": "Update an existing meal plan",
+        "description": "Update an existing mealPlan",
         "produces": [
           "application/json"
         ],
         "tags": [
-          "mealplans"
+          "mealPlans"
         ],
         "operationId": "updateMealPlan",
         "parameters": [
           {
             "type": "string",
-            "description": "ID of the mealplan",
+            "description": "ID of the mealPlan",
             "name": "id",
             "in": "path",
             "required": true
