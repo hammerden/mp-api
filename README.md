@@ -17,8 +17,11 @@ Create folder
 
 `mkdir ./mongodb_data`
 
-## Run the container
+## Local: Run mongodb container
 `docker run -d --name mongodb -v $(pwd)/mongodb_data:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:5.0.14`
+
+## Local: Run redis container
+`docker run -d -v $(pwd)/conf/redis:/usr/local/etc/redis --name redis -p 6379:6379 redis:6.0`
 
 ## Compass connection string
 `mongodb://admin:password@localhost:27017`
