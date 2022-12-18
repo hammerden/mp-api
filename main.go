@@ -30,6 +30,7 @@ import (
 )
 
 var mealPlansHandler *handlers.MealPlansHandler
+var authHandler *handlers.AuthHandler
 
 func init() {
 	ctx := context.Background() //TODO: Understand https://go.dev/blog/context
@@ -53,12 +54,19 @@ func init() {
 
 	mealPlansHandler = handlers.NewMealPlansHandler(ctx,
 		collection, redisClient)
+	authHandler = &handlers.AuthHandler{}
 }
 
 func main() {
 	router := gin.Default()
-	router.POST("/mp", mealPlansHandler.NewMealPlanHandler)
 	router.GET("/mp", mealPlansHandler.ListMealPlansHandler)
-	router.PUT("/mp/:id", mealPlansHandler.UpdateMealPlanHandler)
+	router.POST("/signin", authHandler.SignInHandler)
+
+	authorized := router.Group("/")
+	authorized.Use(authHandler.AuthMiddleware())
+	{
+		authorized.POST("/mp", mealPlansHandler.NewMealPlanHandler)
+		authorized.PUT("/mp/:id", mealPlansHandler.UpdateMealPlanHandler)
+	}
 	router.Run()
 }
