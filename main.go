@@ -45,7 +45,7 @@ func init() {
 		"MONGO_DATABASE")).Collection("mealPlan")
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     os.Getenv("REDIS_URI"),
 		Password: "",
 		DB:       0,
 	})
@@ -54,7 +54,9 @@ func init() {
 
 	mealPlansHandler = handlers.NewMealPlansHandler(ctx,
 		collection, redisClient)
-	authHandler = &handlers.AuthHandler{}
+
+	collectionUsers := client.Database(os.Getenv("MONGO_DATABASE")).Collection("users")
+	authHandler = handlers.NewAuthHandler(ctx, collectionUsers)
 }
 
 func main() {
