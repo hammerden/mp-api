@@ -88,6 +88,7 @@ func main() {
 
 	router.GET("/mp", mealPlansHandler.ListMealPlansHandler)
 	router.POST("/signin", authHandler.SignInHandler)
+	router.POST("/signout", authHandler.SignOutHandler)
 	router.POST("/refresh", authHandler.RefreshHandler)
 
 	authorized := router.Group("/")

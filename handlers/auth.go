@@ -58,6 +58,13 @@ func (handler *AuthHandler) SignInHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User signed in"})
 }
 
+func (handler *AuthHandler) SignOutHandler(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.JSON(http.StatusOK, gin.H{"message": "Signed out..."})
+}
+
 func (handler *AuthHandler) AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
