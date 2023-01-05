@@ -1,6 +1,6 @@
 // Meal Plan API
 //
-// This is a sample mealPlans API. You can find out more about the API at https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin.
+// This is a sample mealPlans API. You can find out more about the API at https://github.com/hammerden/mp-api
 //
 //	Schemes: http
 //	Host: localhost:8080
@@ -97,5 +97,5 @@ func main() {
 		authorized.POST("/mp", mealPlansHandler.NewMealPlanHandler)
 		authorized.PUT("/mp/:id", mealPlansHandler.UpdateMealPlanHandler)
 	}
-	router.Run()
+	router.RunTLS(":443", "certs/localhost.crt", "certs/localhost.key")
 }
