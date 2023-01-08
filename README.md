@@ -28,8 +28,12 @@ Create folder
 
 ## Set env variables
 ```
+export MONGO_URI="mongodb://admin:password@localhost:27017/mealPlan?authSource=admin"
 export MONGO_DATABASE=mealPlan
-export MONGO_URI="mongodb://admin:password@0.0.0.0:27017/mealPlan?authSource=admin"
+export JWT_SECRET=eUbP9shywUygMx7u
+export REDIS_URI="localhost:6379"
+export AUTH0_DOMAIN=dev-4sr25mf1f8ky1b7v.us.auth0.com
+export AUTH0_API_IDENTIFIER="https://api.mealplan.io"
 ```
 > Make sure that your IDE can read this values
 
